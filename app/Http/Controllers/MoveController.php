@@ -83,6 +83,7 @@ class MoveController extends Controller
         return redirect()->route('games.show', $game);
     }
 
+    //eindigen spel en opslaan van de resultaten
     protected function finishGame(Game $game, ?string $winningSymbol): void
     {
         $winnerUserId = match ($winningSymbol) {
