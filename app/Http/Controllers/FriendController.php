@@ -15,7 +15,13 @@ class FriendController extends Controller
     {
         $userId = Auth::id();
 
-        $friends = Auth::user()->friends()->get();
+        //auth::user() retourneert voor de IDE een Authenticatable
+        //met deze typehint weet Intelephense dat het om een User-model gaat,
+        //anders wordt friends() niet correct worden gezien
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $friends = $user->friends()->get();
 
         $receivedPending = Friend::with('user')
             ->where('friend_id', $userId)

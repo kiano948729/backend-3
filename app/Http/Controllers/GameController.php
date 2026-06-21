@@ -68,7 +68,16 @@ class GameController extends Controller
 
         abort_if($friend->id === $userId, 403, 'Je kunt jezelf niet uitdagen.');
 
-        $isFriend = Auth::user()->friends()->where('id', $friend->id)->exists();
+        //auth::user() retourneert voor de IDE een Authenticatable
+        //met deze typehint weet Intelephense dat het om een User-model gaat,
+        //anders wordt friends() niet correct worden gezien
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $isFriend = $user->friends()
+            ->where('id', $friend->id)
+            ->exists();
+
         abort_unless($isFriend, 403, 'Je kunt alleen vrienden uitdagen.');
 
         $game = Game::create([
