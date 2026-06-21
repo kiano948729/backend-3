@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
+use App\Models\User;
 use App\Services\TicTacToeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -59,6 +60,53 @@ class GameController extends Controller
         ]);
 
         return redirect()->route('games.show', $game);
+    }
+
+    public function challenge(User $friend): RedirectResponse
+    {
+        $userId = Auth::id();
+
+        abort_if($friend->id === $userId, 403, 'Je kunt jezelf niet uitdagen.');
+
+        $isFriend = Auth::user()->friends()->where('id', $friend->id)->exists();
+        abort_unless($isFriend, 403, 'Je kunt alleen vrienden uitdagen.');
+
+        $game = Game::create([
+            'player_one_id' => $userId,
+            'player_two_id' => $friend->id,
+            'status' => 'active',
+            'current_turn_user_id' => $userId,
+        ]);
+
+        return redirect()->route('games.show', $game);
+    }
+    public function matchmake(): RedirectResponse
+    {
+        $userId = Auth::id();
+
+        $openGame = Game::where('status', 'waiting')
+            ->where('player_one_id', '!=', $userId)
+            ->oldest()
+            ->first();
+
+        if ($openGame) {
+            $openGame->update([
+                'player_two_id' => $userId,
+                'status' => 'active',
+                'current_turn_user_id' => $openGame->player_one_id,
+            ]);
+
+            return redirect()->route('games.show', $openGame)
+                ->with('status', 'Tegenstander gevonden!');
+        }
+
+        $game = Game::create([
+            'player_one_id' => $userId,
+            'status' => 'waiting',
+        ]);
+
+        return redirect()->route('games.show', $game)
+            ->with('status', 'Geen tegenstander beschikbaar, je wacht nu zelf op iemand.');
     }
 
     public function show(Game $game): View

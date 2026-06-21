@@ -42,9 +42,6 @@ class FriendController extends Controller
         ]);
     }
 
-    /**
-     * Stuur een vriendschapsverzoek naar een andere gebruiker.
-     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -75,9 +72,6 @@ class FriendController extends Controller
         return back()->with('status', 'Vriendschapsverzoek verstuurd.');
     }
 
-    /**
-     * Accepteer of weiger een ontvangen vriendschapsverzoek.
-     */
     public function update(Request $request, Friend $friend): RedirectResponse
     {
         abort_unless($friend->friend_id === Auth::id(), 403, 'Dit verzoek is niet voor jou.');
@@ -93,9 +87,6 @@ class FriendController extends Controller
             : 'Vriendschapsverzoek geweigerd.');
     }
 
-    /**
-     * Verwijder een vriendschap of trek een eigen verzoek terug.
-     */
     public function destroy(Friend $friend): RedirectResponse
     {
         $userId = Auth::id();
