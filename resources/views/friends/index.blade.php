@@ -91,7 +91,7 @@
             </div>
 
             <div class="bg-white shadow sm:rounded-lg p-6 text-center">
-                <h3 class="text-lg font-medium mb-2">Geen vrienden online?</h3>
+                <h3 class="text-lg font-medium mb-2">tegen een random spelen</h3>
                 <p class="text-gray-500 mb-4">Speel direct tegen een willekeurige tegenstander.</p>
                 <form method="POST" action="{{ route('games.matchmake') }}">
                     @csrf
