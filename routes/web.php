@@ -4,6 +4,7 @@ use App\Http\Controllers\FriendController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\MoveController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LeaderboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -35,6 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/friends', [FriendController::class, 'store'])->name('friends.store');
     Route::patch('/friends/{friend}', [FriendController::class, 'update'])->name('friends.update');
     Route::delete('/friends/{friend}', [FriendController::class, 'destroy'])->name('friends.destroy');
+
+    //leaderboard
+    Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
 });
 
 require __DIR__.'/auth.php';
