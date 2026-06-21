@@ -15,7 +15,13 @@ class FriendController extends Controller
     {
         $userId = Auth::id();
 
-        $friends = Auth::user()->friends()->get();
+        //auth::user() retourneert voor de IDE een Authenticatable
+        //met deze typehint weet Intelephense dat het om een User-model gaat,
+        //anders wordt friends() niet correct worden gezien
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $friends = $user->friends()->get();
 
         $receivedPending = Friend::with('user')
             ->where('friend_id', $userId)
@@ -42,9 +48,6 @@ class FriendController extends Controller
         ]);
     }
 
-    /**
-     * Stuur een vriendschapsverzoek naar een andere gebruiker.
-     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -75,9 +78,6 @@ class FriendController extends Controller
         return back()->with('status', 'Vriendschapsverzoek verstuurd.');
     }
 
-    /**
-     * Accepteer of weiger een ontvangen vriendschapsverzoek.
-     */
     public function update(Request $request, Friend $friend): RedirectResponse
     {
         abort_unless($friend->friend_id === Auth::id(), 403, 'Dit verzoek is niet voor jou.');
@@ -93,9 +93,6 @@ class FriendController extends Controller
             : 'Vriendschapsverzoek geweigerd.');
     }
 
-    /**
-     * Verwijder een vriendschap of trek een eigen verzoek terug.
-     */
     public function destroy(Friend $friend): RedirectResponse
     {
         $userId = Auth::id();

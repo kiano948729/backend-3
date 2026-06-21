@@ -24,7 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/games', [GameController::class, 'store'])->name('games.store');
     Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
     Route::post('/games/{game}/join', [GameController::class, 'join'])->name('games.join');
-
+    Route::post('/games/challenge/{friend}', [GameController::class, 'challenge'])->name('games.challenge');
+    Route::post('/games/matchmake', [GameController::class, 'matchmake'])->name('games.matchmake');
+    
     //moves
     Route::post('/games/{game}/moves', [MoveController::class, 'store'])->name('moves.store');
 
