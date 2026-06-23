@@ -6,9 +6,14 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['game_id', 'user_id', 'winner_user_id', 'result'])]
 class GameResult extends Model
 {
+    protected $fillable = [
+        'game_id',
+        'user_id',
+        'winner_user_id',
+        'result',
+    ];
     public function game(): BelongsTo
     {
         return $this->belongsTo(Game::class);

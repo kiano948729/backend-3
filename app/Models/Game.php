@@ -8,9 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-#[Fillable(['player_one_id', 'player_two_id', 'status', 'current_turn_user_id', 'winner_user_id'])]
 class Game extends Model
 {
+    protected $fillable = [
+        'player_one_id',
+        'player_two_id',
+        'status',
+        'current_turn_user_id',
+        'winner_user_id',
+    ];
     public function playerOne(): BelongsTo
     {
         return $this->belongsTo(User::class, 'player_one_id');

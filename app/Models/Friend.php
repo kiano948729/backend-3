@@ -6,9 +6,13 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['user_id', 'friend_id', 'status'])]
 class Friend extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'friend_id',
+        'status',
+    ];
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
