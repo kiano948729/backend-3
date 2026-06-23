@@ -14,6 +14,7 @@ class TicTacToeService
         [0, 4, 8], [2, 4, 6],            
     ];
 
+    //bouwt het speelbord op basis van alle gespeelde zetten
     public function buildBoard(Game $game): array
     {
         $board = array_fill(0, 9, null);
@@ -27,8 +28,7 @@ class TicTacToeService
 
     
      //bepaalt of de gegeven user_id heeft gewonnen op basis van het bord
-     //geeft het winnende symbool (X of O) of null als er geen winnaar is
-    
+     //geeft het winnende symbool (X of O) of null als er geen winnaar is vandaar de ?string 
     public function checkWinner(array $board): ?string
     {
         foreach (self::WINNING_LINES as [$a, $b, $c]) {
@@ -40,11 +40,13 @@ class TicTacToeService
         return null;
     }
 
+    //controleert of het spel in een gelijkspel is geeindigd
     public function isDraw(array $board): bool
     {
         return ! in_array(null, $board, true) && $this->checkWinner($board) === null;
     }
 
+    //controleert of een zet geldig is
     public function isValidMove(array $board, int $position): bool
     {
         return $position >= 0 && $position <= 8 && $board[$position] === null;

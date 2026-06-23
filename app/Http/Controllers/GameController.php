@@ -12,10 +12,12 @@ use Illuminate\View\View;
 
 class GameController extends Controller
 {
+    //injecteert de tictactoe service in de controller
     public function __construct(protected TicTacToeService $ticTacToe)
     {
     }
 
+    //toont een overzicht van eigen en beschikbare games
     public function index(): View
     {
         $userId = Auth::id();
@@ -36,6 +38,7 @@ class GameController extends Controller
         ]);
     }
 
+    //maakt een nieuwe game aan en wacht op een tegenstander
     public function store(Request $request): RedirectResponse
     {
         $game = Game::create([
@@ -48,6 +51,7 @@ class GameController extends Controller
             ->with('status', 'Game aangemaakt. Wacht op een tegenstander, of vraag een vriend.');
     }
 
+    //laat een gebruiker deelnemen aan een openstaande game
     public function join(Game $game): RedirectResponse
     {
         abort_if($game->status !== 'waiting', 403, 'Deze game is niet meer beschikbaar.');
@@ -62,6 +66,7 @@ class GameController extends Controller
         return redirect()->route('games.show', $game);
     }
 
+    //maakt direct een game aan tegen een vriend
     public function challenge(User $friend): RedirectResponse
     {
         $userId = Auth::id();
@@ -89,6 +94,8 @@ class GameController extends Controller
 
         return redirect()->route('games.show', $game);
     }
+
+    //zoekt een open game of maakt er zelf een aan
     public function matchmake(): RedirectResponse
     {
         $userId = Auth::id();
@@ -118,6 +125,7 @@ class GameController extends Controller
             ->with('status', 'Geen tegenstander beschikbaar, je wacht nu zelf op iemand.');
     }
 
+    //toont het speelbord van een game
     public function show(Game $game): View
     {
         $this->authorizeParticipant($game);
@@ -130,6 +138,7 @@ class GameController extends Controller
         ]);
     }
 
+    //controleert of de gebruiker deelneemt aan de game
     protected function authorizeParticipant(Game $game): void
     {
         $userId = Auth::id();
