@@ -11,6 +11,7 @@ use Illuminate\View\View;
 
 class FriendController extends Controller
 {
+    //hier toon het vriendenoverzicht en alle openstaande verzoeken
     public function index(): View
     {
         $userId = Auth::id();
@@ -48,6 +49,7 @@ class FriendController extends Controller
         ]);
     }
 
+    //verstuurt een nieuw vriendschapsverzoek
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -78,6 +80,7 @@ class FriendController extends Controller
         return back()->with('status', 'Vriendschapsverzoek verstuurd.');
     }
 
+    //accepteert of weigert een ontvangen verzoek
     public function update(Request $request, Friend $friend): RedirectResponse
     {
         abort_unless($friend->friend_id === Auth::id(), 403, 'Dit verzoek is niet voor jou.');
@@ -93,6 +96,7 @@ class FriendController extends Controller
             : 'Vriendschapsverzoek geweigerd.');
     }
 
+    //verwijdert een vriendschap of verzoek
     public function destroy(Friend $friend): RedirectResponse
     {
         $userId = Auth::id();
