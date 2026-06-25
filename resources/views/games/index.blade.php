@@ -20,7 +20,6 @@
                     </button>
                 </form>
             </div>
-
             <div class="bg-white shadow sm:rounded-lg p-6">
                 <h3 class="text-lg font-medium mb-4">Jouw games</h3>
 
@@ -34,11 +33,11 @@
                                 {{ $game->playerTwo->name ?? 'wachtend op tegenstander' }}
                             </span>
                             <span class="ml-2 inline-block text-xs px-2 py-1 rounded
-                                        @class([
-                                            'bg-yellow-100 text-yellow-800' => $game->status === 'waiting',
-                                            'bg-blue-100 text-blue-800' => $game->status === 'active',
-                                            'bg-gray-200 text-gray-700' => $game->status === 'finished',
-                                        ])">
+                                                @class([
+                                                    'bg-yellow-100 text-yellow-800' => $game->status == 'waiting',
+                                                    'bg-blue-100 text-blue-800' => $game->status == 'active',
+                                                    'bg-gray-200 text-gray-700' => $game->status == 'finished',
+                                                ])">
                                 {{ $game->status }}
                             </span>
                         </div>

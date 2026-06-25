@@ -54,8 +54,8 @@ class GameController extends Controller
     //laat een gebruiker deelnemen aan een openstaande game
     public function join(Game $game): RedirectResponse
     {
-        abort_if($game->status !== 'waiting', 403, 'Deze game is niet meer beschikbaar.');
-        abort_if($game->player_one_id === Auth::id(), 403, 'Je kunt niet tegen jezelf spelen.');
+        abort_if($game->status != 'waiting', 403, 'Deze game is niet meer beschikbaar.');
+        abort_if($game->player_one_id == Auth::id(), 403, 'Je kunt niet tegen jezelf spelen.');
 
         $game->update([
             'player_two_id' => Auth::id(),
@@ -71,7 +71,7 @@ class GameController extends Controller
     {
         $userId = Auth::id();
 
-        abort_if($friend->id === $userId, 403, 'Je kunt jezelf niet uitdagen.');
+        abort_if($friend->id == $userId, 403, 'Je kunt jezelf niet uitdagen.');
 
         //auth::user() retourneert voor de IDE een Authenticatable
         //met deze typehint weet Intelephense dat het om een User-model gaat,
@@ -144,7 +144,7 @@ class GameController extends Controller
         $userId = Auth::id();
 
         abort_unless(
-            $game->player_one_id === $userId || $game->player_two_id === $userId,
+            $game->player_one_id == $userId || $game->player_two_id == $userId,
             403,
             'Je bent geen deelnemer van deze game.'
         );

@@ -59,7 +59,7 @@ class FriendController extends Controller
         $friendId = (int) $validated['friend_id'];
         $userId = Auth::id();
 
-        abort_if($friendId === $userId, 403, 'Je kunt jezelf geen verzoek sturen.');
+        abort_if($friendId == $userId, 403, 'Je kunt jezelf geen verzoek sturen.');
 
         $exists = Friend::where(function ($q) use ($userId, $friendId) {
             $q->where('user_id', $userId)->where('friend_id', $friendId);
@@ -83,7 +83,7 @@ class FriendController extends Controller
     //accepteert of weigert een ontvangen verzoek
     public function update(Request $request, Friend $friend): RedirectResponse
     {
-        abort_unless($friend->friend_id === Auth::id(), 403, 'Dit verzoek is niet voor jou.');
+        abort_unless($friend->friend_id == Auth::id(), 403, 'Dit verzoek is niet voor jou.');
 
         $validated = $request->validate([
             'status' => ['required', 'in:accepted,rejected'],
@@ -91,7 +91,7 @@ class FriendController extends Controller
 
         $friend->update(['status' => $validated['status']]);
 
-        return back()->with('status', $validated['status'] === 'accepted'
+        return back()->with('status', $validated['status'] == 'accepted'
             ? 'Vriendschapsverzoek geaccepteerd.'
             : 'Vriendschapsverzoek geweigerd.');
     }
@@ -102,7 +102,7 @@ class FriendController extends Controller
         $userId = Auth::id();
 
         abort_unless(
-            $friend->user_id === $userId || $friend->friend_id === $userId,
+            $friend->user_id == $userId || $friend->friend_id == $userId,
             403,
             'Je hebt geen toegang tot dit verzoek.'
         );

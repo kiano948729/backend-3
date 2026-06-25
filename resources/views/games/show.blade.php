@@ -24,19 +24,19 @@
 
                 {{-- Status / beurt-indicator --}}
                 <div id="game-status" class="text-lg font-semibold">
-                    @if ($game->status === 'waiting')
+                    @if ($game->status == 'waiting')
                         <span class="text-yellow-600">Wachten op een tweede speler...</span>
-                    @elseif ($game->status === 'active')
-                        @if ($game->current_turn_user_id === auth()->id())
+                    @elseif ($game->status == 'active')
+                        @if ($game->current_turn_user_id == auth()->id())
                             <span class="text-green-600">Het is jouw beurt!</span>
                         @else
                             <span class="text-gray-500">Wachten op
                                 {{ $game->currentTurnUser->name ?? 'tegenstander' }}...</span>
                         @endif
                     @else
-                        @if ($game->winner_user_id === null)
+                        @if ($game->winner_user_id == null)
                             <span class="text-gray-700">Gelijkspel!</span>
-                        @elseif ($game->winner_user_id === auth()->id())
+                        @elseif ($game->winner_user_id == auth()->id())
                             <span class="text-green-600">Je hebt gewonnen!</span>
                         @else
                             <span class="text-red-600">Je hebt verloren.</span>
@@ -52,11 +52,11 @@
                         <form method="POST" action="{{ route('moves.store', $game) }}">
                             @csrf
                             <input type="hidden" name="position" value="{{ $position }}">
-                            <button type="submit" @disabled($symbol !== null || $game->status !== 'active' || $game->current_turn_user_id !== auth()->id()) class="w-20 h-20 flex items-center justify-center text-3xl font-bold border rounded
-                                        {{ $symbol === null ? 'bg-gray-50 hover:bg-gray-100' : 'bg-white' }}
-                                        {{ $symbol === 'X' ? 'text-indigo-600' : '' }}
-                                        {{ $symbol === 'O' ? 'text-rose-600' : '' }}
-                                        disabled:cursor-not-allowed">
+                            <button type="submit" @disabled($symbol != null || $game->status != 'active' || $game->current_turn_user_id != auth()->id()) class="w-20 h-20 flex items-center justify-center text-3xl font-bold border rounded
+                                                    {{ $symbol == null ? 'bg-gray-50 hover:bg-gray-100' : 'bg-white' }}
+                                                    {{ $symbol == 'X' ? 'text-indigo-600' : '' }}
+                                                    {{ $symbol == 'O' ? 'text-rose-600' : '' }}
+                                                    disabled:cursor-not-allowed">
                                 {{ $symbol }}
                             </button>
                         </form>
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    <!-- @if ($game->status !== 'finished')
+    <!-- @if ($game->status != 'finished')
         <script>
             //eenvoudige polling: herlaad de pagina elke 4 seconden anders is irritant
             setTimeout(() => window.location.reload(), 4000);

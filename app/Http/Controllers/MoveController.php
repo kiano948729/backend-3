@@ -29,18 +29,18 @@ class MoveController extends Controller
 
         //controleren of de gebruiker mag spelen in deze game
         abort_unless(
-            $game->player_one_id === $userId || $game->player_two_id === $userId,
+            $game->player_one_id == $userId || $game->player_two_id == $userId,
             403,
             'Je bent geen deelnemer van deze game.'
         );
 
         //controleren of de game nog actief is
-        if ($game->status !== 'active') {
+        if ($game->status != 'active') {
             return back()->with('error', 'Deze game is niet actief.');
         }
 
         //controleren of het de beurt van de speler is
-        if ($game->current_turn_user_id !== $userId) {
+        if ($game->current_turn_user_id != $userId) {
             return back()->with('error', 'Het is niet jouw beurt.');
         }
 
@@ -55,7 +55,7 @@ class MoveController extends Controller
         //alle wijzigingen in een database transactie uitvoeren
         DB::transaction(function () use ($game, $userId, $validated, $board) {
             //bepalen welk symbool deze speler gebruikt
-            $symbol = $game->player_one_id === $userId ? 'X' : 'O';
+            $symbol = $game->player_one_id == $userId ? 'X' : 'O';
 
             GameMove::create([
                 'game_id' => $game->id,
@@ -70,7 +70,7 @@ class MoveController extends Controller
             //controleren of er een winnaar is
             $winningSymbol = $this->ticTacToe->checkWinner($board);
 
-            if ($winningSymbol !== null) {
+            if ($winningSymbol != null) {
                 $this->finishGame($game, $winningSymbol);
 
                 return;
@@ -83,7 +83,7 @@ class MoveController extends Controller
             }
 
             //beurt doorgeven aan de andere speler
-            $nextTurnUserId = $userId === $game->player_one_id
+            $nextTurnUserId = $userId == $game->player_one_id
                 ? $game->player_two_id
                 : $game->player_one_id;
 
@@ -112,8 +112,8 @@ class MoveController extends Controller
         //resultaat voor beide spelers opslaan
         foreach ([$game->player_one_id, $game->player_two_id] as $playerId) {
             $result = match (true) {
-                $winnerUserId === null => 'draw',
-                $winnerUserId === $playerId => 'win',
+                $winnerUserId == null => 'draw',
+                $winnerUserId == $playerId => 'win',
                 default => 'loss',
             };
 

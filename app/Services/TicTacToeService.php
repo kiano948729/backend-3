@@ -32,7 +32,7 @@ class TicTacToeService
     public function checkWinner(array $board): ?string
     {
         foreach (self::WINNING_LINES as [$a, $b, $c]) {
-            if ($board[$a] !== null && $board[$a] === $board[$b] && $board[$b] === $board[$c]) {
+            if ($board[$a] != null && $board[$a] == $board[$b] && $board[$b] == $board[$c]) {
                 return $board[$a];
             }
         }
@@ -43,12 +43,12 @@ class TicTacToeService
     //controleert of het spel in een gelijkspel is geeindigd
     public function isDraw(array $board): bool
     {
-        return ! in_array(null, $board, true) && $this->checkWinner($board) === null;
+        return ! in_array(null, $board, true) && $this->checkWinner($board) == null;
     }
 
     //controleert of een zet geldig is
     public function isValidMove(array $board, int $position): bool
     {
-        return $position >= 0 && $position <= 8 && $board[$position] === null;
+        return $position >= 0 && $position <= 8 && $board[$position] == null;
     }
 }
